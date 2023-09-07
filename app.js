@@ -9,9 +9,10 @@ app.use(express.json());
 
 // AWS S3 bucket information
 const bucketName = 'cyclic-vast-pink-pants-us-west-2';
-const key = 'dev-data/data.json'; // Replace with the desired S3 key
+const key = `${__dirname}/dev-data/data.json`; // Replace with the desired S3 key
+const region = 'us-west-2'; // Replace with your desired AWS region
 
-const s3 = new S3();
+const s3 = new S3({ region });
 
 // Initialize dataObject
 let dataObject;
@@ -24,7 +25,7 @@ async function fetchDataFromS3() {
     dataObject = JSON.parse(data.Body.toString());
     console.log('Data retrieved from S3');
   } catch (err) {
-    console.error('Error reading data from S3:', err);
+    console.error('Error reading data from S3:', err.message);
     // Handle the error as needed
   }
 }
@@ -37,7 +38,7 @@ app.get('/', (req, res) => {
   const { studentid } = req.query;
 
   if (studentid) {
-    const student = dataObject.students.find((student) => student.studentid === parseInt(studentid));
+    const student = dataObject?.students.find((student) => student.studentid === parseInt(studentid));
     if (student) {
       student.numberofclicks += 1;
 
@@ -48,7 +49,7 @@ app.get('/', (req, res) => {
         Body: JSON.stringify(dataObject),
       }, (err, data) => {
         if (err) {
-          console.error('Error updating data in S3:', err);
+          console.error('Error updating data in S3:', err.message);
           // Handle the error as needed
         } else {
           console.log('Data updated in S3');
