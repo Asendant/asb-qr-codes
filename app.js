@@ -2,29 +2,35 @@ const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 8000;
 const { S3 } = require('aws-sdk');
+const fs = require('fs');
 
 // Middleware to parse JSON body
 app.use(express.json());
 
 // AWS S3 bucket information
 const bucketName = 'cyclic-vast-pink-pants-us-west-2';
-const key = `${__dirname}/data.json`; // Replace with the desired S3 key
+const key = 'dev-data/data.json'; // Replace with the desired S3 key
 
 const s3 = new S3();
 
 // Initialize dataObject
-let dataObject = JSON.parse(`./data.json`);
+let dataObject;
 
 // Retrieve data from S3 bucket and initialize dataObject
-s3.getObject({ Bucket: bucketName, Key: key }, (err, data) => {
-  if (err) {
+async function fetchDataFromS3() {
+  try {
+    const params = { Bucket: bucketName, Key: key };
+    const data = await s3.getObject(params).promise();
+    dataObject = JSON.parse(data.Body.toString());
+    console.log('Data retrieved from S3');
+  } catch (err) {
     console.error('Error reading data from S3:', err);
     // Handle the error as needed
-  } else {
-    dataObject = data.Body.toString();
-    console.log('Data retrieved from S3');
   }
-});
+}
+
+// Initialize dataObject on server startup
+fetchDataFromS3();
 
 // Create the server
 app.get('/', (req, res) => {
