@@ -9,7 +9,7 @@ app.use(express.json());
 
 // AWS S3 bucket information
 const bucketName = 'cyclic-vast-pink-pants-us-west-2';
-const key = 'dev-data/data.json'; // Replace with the desired S3 key
+const key = './dev-data/data.json'; // Replace with the desired S3 key
 const region = 'us-west-2'; // Replace with your desired AWS region
 
 const s3 = new S3({ region });
