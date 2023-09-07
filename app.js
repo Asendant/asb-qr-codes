@@ -13,7 +13,7 @@ const key = `${__dirname}/data.json`; // Replace with the desired S3 key
 const s3 = new S3();
 
 // Initialize dataObject
-let dataObject = JSON.parse(`${__dirname}/data.json`);
+let dataObject = JSON.parse(`./data.json`);
 
 // Retrieve data from S3 bucket and initialize dataObject
 s3.getObject({ Bucket: bucketName, Key: key }, (err, data) => {
