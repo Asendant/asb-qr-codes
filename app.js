@@ -9,13 +9,30 @@ app.use(express.json());
 
 // AWS S3 bucket information
 const bucketName = 'cyclic-vast-pink-pants-us-west-2';
-const key = `${__dirname}/dev-data/data.json`; // Replace with the desired S3 key
+const key = 'dev-data/data.json'; // Replace with the desired S3 key
 const region = 'us-west-2'; // Replace with your desired AWS region
 
 const s3 = new S3({ region });
 
-// Initialize dataObject
-let dataObject;
+// Initialize dataObject by reading the local data.json file
+let dataObject = readLocalDataFile();
+
+// Function to read the local data.json file
+function readLocalDataFile() {
+  try {
+    const data = fs.readFileSync('./data.json', 'utf-8');
+    return JSON.parse(data);
+  } catch (err) {
+    console.error('Error reading local data file:', err.message);
+    // Handle the error as needed
+    return { students: [] }; // Return an empty object as a default value
+  }
+}
+
+// Function to write the local data.json file
+function writeLocalDataFile(data) {
+  fs.writeFileSync('./data.json', JSON.stringify(data, null, 2), 'utf-8');
+}
 
 // Retrieve data from S3 bucket and initialize dataObject
 async function fetchDataFromS3() {
@@ -55,6 +72,9 @@ app.get('/', (req, res) => {
           console.log('Data updated in S3');
         }
       });
+
+      // Also update the local data.json file
+      writeLocalDataFile(dataObject);
 
       return res.redirect('https://coast-union-asb.square.site/');
     }
