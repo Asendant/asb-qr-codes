@@ -84,11 +84,18 @@ app.get('/', (req, res) => {
 });
 
 app.get('/data', (req, res) => {
-  if (!dataObject) {
-    return res.status(500).json({ error: 'Data not available' });
-  }
-
-  res.json(dataObject);
+  // Retrieve data from S3 bucket and send it as a response
+  fetchDataFromS3()
+    .then(() => {
+      if (!dataObject) {
+        return res.status(500).json({ error: 'Data not available' });
+      }
+      res.json(dataObject);
+    })
+    .catch((err) => {
+      console.error('Error fetching data from S3:', err.message);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    });
 });
 
 app.listen(PORT, () => {
