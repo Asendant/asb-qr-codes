@@ -20,7 +20,7 @@ let dataObject = readLocalDataFile();
 // Function to read the local data.json file
 function readLocalDataFile() {
   try {
-    const data = fs.readFileSync('./data.json', 'utf-8');
+    const data = fs.readFileSync('./dev-data/data.json', 'utf-8');
     return JSON.parse(data);
   } catch (err) {
     console.error('Error reading local data file:', err.message);
@@ -31,7 +31,7 @@ function readLocalDataFile() {
 
 // Function to write the local data.json file
 function writeLocalDataFile(data) {
-  fs.writeFileSync('./data.json', JSON.stringify(data, null, 2), 'utf-8');
+  fs.writeFileSync('./dev-data/data.json', JSON.stringify(data, null, 2), 'utf-8');
 }
 
 // Retrieve data from S3 bucket and initialize dataObject
