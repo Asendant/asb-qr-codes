@@ -21,7 +21,7 @@ s3.getObject({ Bucket: bucketName, Key: key }, (err, data) => {
     console.error('Error reading data from S3:', err);
     // Handle the error as needed
   } else {
-    dataObject = JSON.parse(data.Body.toString());
+    dataObject = data.Body.toString();
     console.log('Data retrieved from S3');
   }
 });
