@@ -1,15 +1,30 @@
 const express = require('express');
 const app = express();
 const PORT = process.env.PORT || 8000;
-const AWS = require('aws-sdk');
-const s3 = new AWS.S3();
+const { S3 } = require('aws-sdk');
 
 // Middleware to parse JSON body
 app.use(express.json());
 
 // AWS S3 bucket information
 const bucketName = 'cyclic-vast-pink-pants-us-west-2';
-const key = './dev-data/data.json'; // Replace with the desired S3 key
+const key = 'dev-data/data.json'; // Replace with the desired S3 key
+
+const s3 = new S3();
+
+// Initialize dataObject
+let dataObject;
+
+// Retrieve data from S3 bucket and initialize dataObject
+s3.getObject({ Bucket: bucketName, Key: key }, (err, data) => {
+  if (err) {
+    console.error('Error reading data from S3:', err);
+    // Handle the error as needed
+  } else {
+    dataObject = JSON.parse(data.Body.toString());
+    console.log('Data retrieved from S3');
+  }
+});
 
 // Create the server
 app.get('/', (req, res) => {
@@ -28,6 +43,7 @@ app.get('/', (req, res) => {
       }, (err, data) => {
         if (err) {
           console.error('Error updating data in S3:', err);
+          // Handle the error as needed
         } else {
           console.log('Data updated in S3');
         }
@@ -41,16 +57,11 @@ app.get('/', (req, res) => {
 });
 
 app.get('/data', (req, res) => {
-  // Retrieve data from S3 bucket
-  s3.getObject({ Bucket: bucketName, Key: key }, (err, data) => {
-    if (err) {
-      console.error('Error reading data from S3:', err);
-      return res.status(500).json({ error: 'Internal Server Error' });
-    }
+  if (!dataObject) {
+    return res.status(500).json({ error: 'Data not available' });
+  }
 
-    const dataObject = JSON.parse(data.Body.toString());
-    res.json(dataObject);
-  });
+  res.json(dataObject);
 });
 
 app.listen(PORT, () => {
