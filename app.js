@@ -36,7 +36,7 @@ function writeLocalDataFile(data) {
 
 // Retrieve data from S3 bucket and initialize dataObject
 async function fetchDataFromS3() {
-  const params = { Bucket: bucketName, Key: "./dev-data/data.json" };
+  const params = { Bucket: bucketName, Key: dataObject };
   try {
     const data = await s3.getObject(params).promise();
     dataObject = JSON.parse(data.Body.toString());
