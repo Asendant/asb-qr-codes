@@ -8,12 +8,12 @@ app.use(express.json());
 
 // AWS S3 bucket information
 const bucketName = 'cyclic-vast-pink-pants-us-west-2';
-const key = 'dev-data/data.json'; // Replace with the desired S3 key
+const key = `${__dirname}/data.json`; // Replace with the desired S3 key
 
 const s3 = new S3();
 
 // Initialize dataObject
-let dataObject = JSON.parse(`${__dirname}./data.json`);
+let dataObject = JSON.parse(`${__dirname}/data.json`);
 
 // Retrieve data from S3 bucket and initialize dataObject
 s3.getObject({ Bucket: bucketName, Key: key }, (err, data) => {
