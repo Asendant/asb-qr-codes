@@ -8,7 +8,7 @@ const s3 = new AWS.S3();
 app.use(express.json());
 
 // AWS S3 bucket information
-const bucketName = 'cyclic-real-gold-coral-hem-us-west-2';
+const bucketName = 'cyclic-vast-pink-pants-us-west-2';
 const key = './dev-data/data.json'; // Replace with the desired S3 key
 
 // Create the server
