@@ -42,7 +42,7 @@ async function fetchDataFromS3() {
     dataObject = JSON.parse(data.Body.toString());
     console.log('Data retrieved from S3');
   } catch (err) {
-    console.error(`Error reading data from S3: Key: ${Key}`, err.message);
+    console.error(`Error reading data from S3: Key: ${params.Key}`, err.message);
     // Handle the error as needed
   }
 }
