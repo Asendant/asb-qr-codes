@@ -9,7 +9,7 @@ app.use(express.json());
 
 // AWS S3 bucket information
 const bucketName = 'cyclic-vast-pink-pants-us-west-2';
-const key = 'ASIAY4LEF566FQRXMJVX'; // Replace with the desired S3 key
+const key = "./dev-data/data.json"; // Replace with the desired S3 key
 const region = 'us-west-2'; // Replace with your desired AWS region
 
 const s3 = new S3({ region });
@@ -37,7 +37,7 @@ function writeLocalDataFile(data) {
 // Retrieve data from S3 bucket and initialize dataObject
 async function fetchDataFromS3() {
   try {
-    const params = { Bucket: bucketName, Key: key };
+    const params = { Bucket: bucketName, Key: "./dev-data/data.json" };
     const data = await s3.getObject(params).promise();
     dataObject = JSON.parse(data.Body.toString());
     console.log('Data retrieved from S3');
